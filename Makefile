@@ -4,8 +4,8 @@ generate_migrations:
 
 # run up migrations, user details based on docker-compose.yml
 migrate_up:
-	migrate -path db/migrations -database "postgresql://devuser:admin@localhost:5432/portfolio_db?sslmode=disable" -verbose up
+	migrate -path db/migrations -database "postgresql://devuser:admin@localhost:5432/cv_db?sslmode=disable" -verbose up
 
 # run down migrations, user details based on docker-compose.yml
 migrate_down:
-	migrate -path db/migrations -database "postgresql://devuser:admin@localhost:5432/portfolio_db?sslmode=disable" -verbose down
+	migrate -path db/migrations -database "postgresql://devuser:admin@localhost:5432/cv_db?sslmode=disable" -verbose down
