@@ -23,4 +23,8 @@ test:
 test_coverage:
 	go test $(p) -coverprofile=coverage.out && go tool cover -html=coverage.out
 
+# run the main.go file - start the HTTP server
+run:
+	go run cmd/main.go
+
 .PHONY: generate_migrations, migrate_up, migrate_down, sqlc
