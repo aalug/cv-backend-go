@@ -36,6 +36,7 @@ func createRandomCvProfile(t *testing.T) CvProfile {
 	require.Equal(t, params.Bio, cvProfile.Bio)
 	require.Equal(t, params.ProfilePicture, cvProfile.ProfilePicture)
 	require.NotZero(t, cvProfile.CreatedAt)
+	require.NotZero(t, cvProfile.ID)
 
 	if params.LinkedinUrl.Valid {
 		require.Equal(t, params.LinkedinUrl.String, cvProfile.LinkedinUrl.String)

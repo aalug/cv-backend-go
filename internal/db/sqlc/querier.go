@@ -11,11 +11,14 @@ import (
 type Querier interface {
 	CreateCvEducation(ctx context.Context, arg CreateCvEducationParams) (CvEducation, error)
 	CreateCvProfile(ctx context.Context, arg CreateCvProfileParams) (CvProfile, error)
+	CreateProject(ctx context.Context, arg CreateProjectParams) (Project, error)
 	CreateSkill(ctx context.Context, arg CreateSkillParams) (Skill, error)
 	GetCvEducation(ctx context.Context, id int32) (CvEducation, error)
 	GetCvProfile(ctx context.Context, id int32) (CvProfile, error)
+	GetProject(ctx context.Context, id int32) (Project, error)
 	GetSkill(ctx context.Context, id int32) (Skill, error)
 	ListCvEducations(ctx context.Context, arg ListCvEducationsParams) ([]CvEducation, error)
+	ListProjects(ctx context.Context, arg ListProjectsParams) ([]Project, error)
 	ListSkills(ctx context.Context, arg ListSkillsParams) ([]Skill, error)
 }
 

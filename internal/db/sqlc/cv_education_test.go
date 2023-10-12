@@ -27,6 +27,7 @@ func createRandomCvEducation(t *testing.T) CvEducation {
 	require.Equal(t, params.StartDate.Format("2006-01-02"), cvEducation.StartDate.Format("2006-01-02"))
 	require.Equal(t, params.EndDate.Format("2006-01-02"), cvEducation.EndDate.Format("2006-01-02"))
 	require.Equal(t, params.CvProfileID, cvEducation.CvProfileID)
+	require.NotZero(t, cvEducation.ID)
 
 	return cvEducation
 }

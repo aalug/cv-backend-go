@@ -7,6 +7,7 @@ import (
 	"testing"
 )
 
+// createRandomSkill create and return a random project
 func createRandomSkill(t *testing.T) Skill {
 	cvProfile := createRandomCvProfile(t)
 	params := CreateSkillParams{
