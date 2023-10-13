@@ -29,6 +29,9 @@ func NewServer(cfg config.Config, store db.Store) *Server {
 func (server *Server) setupRouter() {
 	router := gin.Default()
 
+	// --- cv profiles ---
+	router.GET("/cv-profiles/:id", server.getCvProfile)
+
 	server.router = router
 }
 
