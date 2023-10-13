@@ -2,7 +2,7 @@ package config
 
 import "github.com/spf13/viper"
 
-func LoadConfig(path string) (config Config, err error) {
+func LoadConfig(path string) (cfg Config, err error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigName("app")
 	viper.SetConfigType("env")
@@ -14,6 +14,6 @@ func LoadConfig(path string) (config Config, err error) {
 		return
 	}
 
-	err = viper.Unmarshal(&config)
+	err = viper.Unmarshal(&cfg)
 	return
 }

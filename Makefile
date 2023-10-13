@@ -27,4 +27,9 @@ test_coverage:
 run:
 	go run cmd/main.go
 
-.PHONY: generate_migrations, migrate_up, migrate_down, sqlc
+# generate mock db for testing
+mock:
+	mockgen -package mockdb -destination internal/db/mock/store.go github.com/aalug/cv-backend-go/internal/db/sqlc Store
+
+
+.PHONY: generate_migrations, migrate_up, migrate_down, sqlc, run, mock
