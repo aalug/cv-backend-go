@@ -67,16 +67,19 @@ func (q *Queries) GetCvEducation(ctx context.Context, id int32) (CvEducation, er
 const listCvEducations = `-- name: ListCvEducations :many
 SELECT id, institution, degree, start_date, end_date, cv_profile_id
 FROM cv_educations
-LIMIT $1 OFFSET $2
+WHERE cv_profile_id = $1
+ORDER BY start_date DESC
+LIMIT $2 OFFSET $3
 `
 
 type ListCvEducationsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
+	CvProfileID int32 `json:"cv_profile_id"`
+	Limit       int32 `json:"limit"`
+	Offset      int32 `json:"offset"`
 }
 
 func (q *Queries) ListCvEducations(ctx context.Context, arg ListCvEducationsParams) ([]CvEducation, error) {
-	rows, err := q.db.QueryContext(ctx, listCvEducations, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, listCvEducations, arg.CvProfileID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

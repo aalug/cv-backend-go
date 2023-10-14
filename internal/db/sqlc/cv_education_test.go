@@ -9,14 +9,16 @@ import (
 )
 
 // createRandomCvEducation create and return a random cv education
-func createRandomCvEducation(t *testing.T) CvEducation {
-	cvProfile := createRandomCvProfile(t)
+func createRandomCvEducation(t *testing.T, cvProfileID int32) CvEducation {
+	if cvProfileID == 0 {
+		cvProfileID = createRandomCvProfile(t).ID
+	}
 	params := CreateCvEducationParams{
 		Institution: utils.RandomString(5),
 		Degree:      utils.RandomString(5),
 		StartDate:   time.Now(),
 		EndDate:     time.Now(),
-		CvProfileID: cvProfile.ID,
+		CvProfileID: cvProfileID,
 	}
 
 	cvEducation, err := testQueries.CreateCvEducation(context.Background(), params)
@@ -33,11 +35,11 @@ func createRandomCvEducation(t *testing.T) CvEducation {
 }
 
 func TestQueries_CreateCvEducation(t *testing.T) {
-	createRandomCvEducation(t)
+	createRandomCvEducation(t, 0)
 }
 
 func TestQueries_GetCvEducation(t *testing.T) {
-	cvEducation := createRandomCvEducation(t)
+	cvEducation := createRandomCvEducation(t, 0)
 	cvEducation2, err := testQueries.GetCvEducation(context.Background(), cvEducation.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, cvEducation2)
@@ -52,13 +54,16 @@ func TestQueries_GetCvEducation(t *testing.T) {
 }
 
 func TestQueries_ListCvEducations(t *testing.T) {
+	cvProfile := createRandomCvProfile(t)
+	cvProfileID := cvProfile.ID
 	for i := 0; i < 5; i++ {
-		createRandomCvEducation(t)
+		createRandomCvEducation(t, cvProfileID)
 	}
 
 	params := ListCvEducationsParams{
-		Limit:  5,
-		Offset: 5,
+		CvProfileID: cvProfileID,
+		Limit:       5,
+		Offset:      0,
 	}
 
 	cvEducations, err := testQueries.ListCvEducations(context.Background(), params)
@@ -67,5 +72,6 @@ func TestQueries_ListCvEducations(t *testing.T) {
 
 	for _, cvEducation := range cvEducations {
 		require.NotEmpty(t, cvEducation)
+		require.Equal(t, cvProfileID, cvEducation.CvProfileID)
 	}
 }

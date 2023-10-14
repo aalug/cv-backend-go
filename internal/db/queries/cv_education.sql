@@ -11,4 +11,6 @@ WHERE id = $1;
 -- name: ListCvEducations :many
 SELECT *
 FROM cv_educations
-LIMIT $1 OFFSET $2;
+WHERE cv_profile_id = $1
+ORDER BY start_date DESC
+LIMIT $2 OFFSET $3;
