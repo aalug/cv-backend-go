@@ -10,15 +10,16 @@ import (
 )
 
 const createSkill = `-- name: CreateSkill :one
-INSERT INTO skills (name, description, category, image, hex_theme_color, cv_profile_id)
-VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id, name, description, category, image, hex_theme_color, cv_profile_id
+INSERT INTO skills (name, description, category, importance, image, hex_theme_color, cv_profile_id)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING id, name, description, category, image, hex_theme_color, cv_profile_id, importance
 `
 
 type CreateSkillParams struct {
 	Name          string `json:"name"`
 	Description   string `json:"description"`
 	Category      string `json:"category"`
+	Importance    int32  `json:"importance"`
 	Image         string `json:"image"`
 	HexThemeColor string `json:"hex_theme_color"`
 	CvProfileID   int32  `json:"cv_profile_id"`
@@ -29,6 +30,7 @@ func (q *Queries) CreateSkill(ctx context.Context, arg CreateSkillParams) (Skill
 		arg.Name,
 		arg.Description,
 		arg.Category,
+		arg.Importance,
 		arg.Image,
 		arg.HexThemeColor,
 		arg.CvProfileID,
@@ -42,12 +44,13 @@ func (q *Queries) CreateSkill(ctx context.Context, arg CreateSkillParams) (Skill
 		&i.Image,
 		&i.HexThemeColor,
 		&i.CvProfileID,
+		&i.Importance,
 	)
 	return i, err
 }
 
 const getSkill = `-- name: GetSkill :one
-SELECT id, name, description, category, image, hex_theme_color, cv_profile_id
+SELECT id, name, description, category, image, hex_theme_color, cv_profile_id, importance
 FROM skills
 WHERE id = $1
 `
@@ -63,24 +66,28 @@ func (q *Queries) GetSkill(ctx context.Context, id int32) (Skill, error) {
 		&i.Image,
 		&i.HexThemeColor,
 		&i.CvProfileID,
+		&i.Importance,
 	)
 	return i, err
 }
 
 const listSkills = `-- name: ListSkills :many
-SELECT id, name, description, category, image, hex_theme_color, cv_profile_id
+SELECT id, name, description, category, image, hex_theme_color, cv_profile_id, importance
 FROM skills
+WHERE cv_profile_id = $1
 GROUP BY category, id
-LIMIT $1 OFFSET $2
+ORDER BY importance
+LIMIT $2 OFFSET $3
 `
 
 type ListSkillsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
+	CvProfileID int32 `json:"cv_profile_id"`
+	Limit       int32 `json:"limit"`
+	Offset      int32 `json:"offset"`
 }
 
 func (q *Queries) ListSkills(ctx context.Context, arg ListSkillsParams) ([]Skill, error) {
-	rows, err := q.db.QueryContext(ctx, listSkills, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, listSkills, arg.CvProfileID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -96,6 +103,7 @@ func (q *Queries) ListSkills(ctx context.Context, arg ListSkillsParams) ([]Skill
 			&i.Image,
 			&i.HexThemeColor,
 			&i.CvProfileID,
+			&i.Importance,
 		); err != nil {
 			return nil, err
 		}

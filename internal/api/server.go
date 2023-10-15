@@ -32,6 +32,9 @@ func (server *Server) setupRouter() {
 	// --- cv profiles ---
 	router.GET("/cv-profiles/:id", server.getCvProfile)
 
+	// --- skills ---
+	router.GET("/skills/:id", server.listSkills)
+
 	server.router = router
 }
 
