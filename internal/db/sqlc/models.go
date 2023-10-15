@@ -51,4 +51,5 @@ type Skill struct {
 	Image         string `json:"image"`
 	HexThemeColor string `json:"hex_theme_color"`
 	CvProfileID   int32  `json:"cv_profile_id"`
+	Importance    int32  `json:"importance"`
 }
