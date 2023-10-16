@@ -37,6 +37,7 @@ func (server *Server) setupRouter() {
 
 	// --- projects ---
 	router.GET("/projects/:id", server.listProjects)
+	router.GET("/project-details/:id", server.getProjectDetails)
 
 	server.router = router
 }
