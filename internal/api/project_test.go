@@ -169,6 +169,93 @@ func TestListProjectsAPI(t *testing.T) {
 	}
 }
 
+func TestGetProjectDetailsAPI(t *testing.T) {
+	cvProfile := generateRandomCvProfile()
+	project := generateRandomProject(cvProfile.ID)
+
+	testCases := []struct {
+		name          string
+		id            int32
+		buildStubs    func(store *mockdb.MockStore)
+		checkResponse func(recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name: "OK",
+			id:   project.ID,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetProject(gomock.Any(), gomock.Eq(project.ID)).
+					Times(1).
+					Return(project, nil)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchProjectDetails(t, recorder.Body, project)
+			},
+		},
+		{
+			name: "Invalid ID",
+			id:   0,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetProject(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "Not Found",
+			id:   project.ID,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetProject(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(db.GetProjectRow{}, sql.ErrNoRows)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusNotFound, recorder.Code)
+			},
+		},
+		{
+			name: "Internal Server Error",
+			id:   project.ID,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetProject(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(db.GetProjectRow{}, sql.ErrConnDone)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+	}
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			store := mockdb.NewMockStore(ctrl)
+			tc.buildStubs(store)
+
+			server := newTestServer(store)
+			recorder := httptest.NewRecorder()
+
+			url := fmt.Sprintf("/project-details/%d", tc.id)
+			req, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+
+			server.router.ServeHTTP(recorder, req)
+
+			tc.checkResponse(recorder)
+		})
+	}
+}
+
 // generateRandomProjectRows generates and returns a slice of random list project rows
 func generateRandomProjectRows() []db.ListProjectsRow {
 	var projects []db.ListProjectsRow
@@ -223,4 +310,40 @@ func requireBodyMatchProjects(t *testing.T, body *bytes.Buffer, projects []db.Li
 		require.Equal(t, projects[i].ProjectUrl, gotProjects[i].ProjectUrl)
 		require.Equal(t, projects[i].CvProfileID, gotProjects[i].CvProfileID)
 	}
+}
+
+// generateRandomProject generates and returns a random get project row
+func generateRandomProject(cvProfileID int32) db.GetProjectRow {
+	return db.GetProjectRow{
+		ID:               utils.RandomInt(1, 1000),
+		Title:            utils.RandomString(5),
+		Description:      utils.RandomString(5),
+		Image:            utils.RandomString(5),
+		TechnologiesUsed: []string{utils.RandomString(5), utils.RandomString(5)},
+		HexThemeColor:    utils.RandomString(6),
+		ProjectUrl:       utils.RandomString(5),
+		CvProfileID:      cvProfileID,
+	}
+}
+
+func requireBodyMatchProjectDetails(t *testing.T, body *bytes.Buffer, project db.GetProjectRow) {
+	data, err := io.ReadAll(body)
+	require.NoError(t, err)
+
+	var gotProject db.GetProjectRow
+	err = json.Unmarshal(data, &gotProject)
+	require.NoError(t, err)
+
+	// sort technologies used
+	sort.Strings(project.TechnologiesUsed)
+	sort.Strings(gotProject.TechnologiesUsed)
+
+	require.Equal(t, project.ID, gotProject.ID)
+	require.Equal(t, project.Title, gotProject.Title)
+	require.Equal(t, project.Description, gotProject.Description)
+	require.Equal(t, project.Image, gotProject.Image)
+	require.Equal(t, project.TechnologiesUsed, gotProject.TechnologiesUsed)
+	require.Equal(t, project.HexThemeColor, gotProject.HexThemeColor)
+	require.Equal(t, project.ProjectUrl, gotProject.ProjectUrl)
+	require.Equal(t, project.CvProfileID, gotProject.CvProfileID)
 }

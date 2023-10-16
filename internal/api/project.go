@@ -53,3 +53,31 @@ func (server *Server) listProjects(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, projects)
 }
+
+type getProjectDetailsRequest struct {
+	ID int32 `uri:"id" binding:"required,min=1"` // project id
+}
+
+// getProjectDetails returns project details for a profile cv
+func (server *Server) getProjectDetails(ctx *gin.Context) {
+	var request getProjectDetailsRequest
+	// validate the project id
+	if err := ctx.ShouldBindUri(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	// get project details
+	project, err := server.store.GetProject(ctx, request.ID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, project)
+}
