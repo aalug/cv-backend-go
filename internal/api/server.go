@@ -35,6 +35,9 @@ func (server *Server) setupRouter() {
 	// --- skills ---
 	router.GET("/skills/:id", server.listSkills)
 
+	// --- projects ---
+	router.GET("/projects/:id", server.listProjects)
+
 	server.router = router
 }
 

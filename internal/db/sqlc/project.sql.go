@@ -62,18 +62,35 @@ func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) (P
 }
 
 const getProject = `-- name: GetProject :one
-SELECT id, title, short_description, description, image, technologies_used, hex_theme_color, project_url, cv_profile_id
+SELECT id,
+       title,
+       description,
+       image,
+       technologies_used,
+       hex_theme_color,
+       project_url,
+       cv_profile_id
 FROM projects
 WHERE id = $1
 `
 
-func (q *Queries) GetProject(ctx context.Context, id int32) (Project, error) {
+type GetProjectRow struct {
+	ID               int32    `json:"id"`
+	Title            string   `json:"title"`
+	Description      string   `json:"description"`
+	Image            string   `json:"image"`
+	TechnologiesUsed []string `json:"technologies_used"`
+	HexThemeColor    string   `json:"hex_theme_color"`
+	ProjectUrl       string   `json:"project_url"`
+	CvProfileID      int32    `json:"cv_profile_id"`
+}
+
+func (q *Queries) GetProject(ctx context.Context, id int32) (GetProjectRow, error) {
 	row := q.db.QueryRowContext(ctx, getProject, id)
-	var i Project
+	var i GetProjectRow
 	err := row.Scan(
 		&i.ID,
 		&i.Title,
-		&i.ShortDescription,
 		&i.Description,
 		&i.Image,
 		pq.Array(&i.TechnologiesUsed),
@@ -85,31 +102,50 @@ func (q *Queries) GetProject(ctx context.Context, id int32) (Project, error) {
 }
 
 const listProjects = `-- name: ListProjects :many
-SELECT id, title, short_description, description, image, technologies_used, hex_theme_color, project_url, cv_profile_id
+SELECT id,
+       title,
+       short_description,
+       image,
+       technologies_used,
+       hex_theme_color,
+       project_url,
+       cv_profile_id
 FROM projects
+WHERE cv_profile_id = $1
 ORDER BY technologies_used
-LIMIT $1 OFFSET $2
+LIMIT $2 OFFSET $3
 `
 
 type ListProjectsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
+	CvProfileID int32 `json:"cv_profile_id"`
+	Limit       int32 `json:"limit"`
+	Offset      int32 `json:"offset"`
 }
 
-func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]Project, error) {
-	rows, err := q.db.QueryContext(ctx, listProjects, arg.Limit, arg.Offset)
+type ListProjectsRow struct {
+	ID               int32    `json:"id"`
+	Title            string   `json:"title"`
+	ShortDescription string   `json:"short_description"`
+	Image            string   `json:"image"`
+	TechnologiesUsed []string `json:"technologies_used"`
+	HexThemeColor    string   `json:"hex_theme_color"`
+	ProjectUrl       string   `json:"project_url"`
+	CvProfileID      int32    `json:"cv_profile_id"`
+}
+
+func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]ListProjectsRow, error) {
+	rows, err := q.db.QueryContext(ctx, listProjects, arg.CvProfileID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Project{}
+	items := []ListProjectsRow{}
 	for rows.Next() {
-		var i Project
+		var i ListProjectsRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.Title,
 			&i.ShortDescription,
-			&i.Description,
 			&i.Image,
 			pq.Array(&i.TechnologiesUsed),
 			&i.HexThemeColor,

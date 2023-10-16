@@ -12,6 +12,7 @@ type listSkillsRequest struct {
 	ID int32 `uri:"id" binding:"required,min=1"` // profile cv id
 }
 
+// listSkills returns all skills for a profile cv
 func (server *Server) listSkills(ctx *gin.Context) {
 	var request listSkillsRequest
 	if err := ctx.ShouldBindUri(&request); err != nil {
