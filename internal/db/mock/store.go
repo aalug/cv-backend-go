@@ -126,10 +126,10 @@ func (mr *MockStoreMockRecorder) GetCvProfile(arg0, arg1 interface{}) *gomock.Ca
 }
 
 // GetProject mocks base method.
-func (m *MockStore) GetProject(arg0 context.Context, arg1 int32) (db.Project, error) {
+func (m *MockStore) GetProject(arg0 context.Context, arg1 int32) (db.GetProjectRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetProject", arg0, arg1)
-	ret0, _ := ret[0].(db.Project)
+	ret0, _ := ret[0].(db.GetProjectRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -171,10 +171,10 @@ func (mr *MockStoreMockRecorder) ListCvEducations(arg0, arg1 interface{}) *gomoc
 }
 
 // ListProjects mocks base method.
-func (m *MockStore) ListProjects(arg0 context.Context, arg1 db.ListProjectsParams) ([]db.Project, error) {
+func (m *MockStore) ListProjects(arg0 context.Context, arg1 db.ListProjectsParams) ([]db.ListProjectsRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListProjects", arg0, arg1)
-	ret0, _ := ret[0].([]db.Project)
+	ret0, _ := ret[0].([]db.ListProjectsRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
