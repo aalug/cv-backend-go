@@ -17,6 +17,8 @@ import (
 	"testing"
 )
 
+const baseUrl = "/api/v1"
+
 func TestListSkillsAPI(t *testing.T) {
 	cvProfile := generateRandomCvProfile()
 	skills := generateRandomSkills()
@@ -103,7 +105,7 @@ func TestListSkillsAPI(t *testing.T) {
 			server := newTestServer(store)
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/skills/%d", tc.id)
+			url := fmt.Sprintf("%s/skills/%d", baseUrl, tc.id)
 			req, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 

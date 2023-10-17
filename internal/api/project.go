@@ -17,6 +17,19 @@ type listProjectsQueryRequest struct {
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=15"`
 }
 
+// @Schemes
+// @Summary List projects for a profile cv
+// @Description List projects for a profile cv with provided ID
+// @Tags projects
+// @Param id path integer true "CV profile ID"
+// @Param page query integer true "Page number"
+// @Param page_size query integer true "Page size"
+// @Produce json
+// @Success 200 {object} []db.ListProjectsRow
+// @Failure 400 {object} ErrorResponse "Invalid ID, page or page size"
+// @Failure 404 {object} ErrorResponse "CV profile with given ID does not exist"
+// @Failure 500 {object} ErrorResponse "Any other server-side error"
+// @Router /projects/{id} [get]
 // listProjects returns a list of projects for a profile cv
 func (server *Server) listProjects(ctx *gin.Context) {
 	// get and validate the cv profile id
@@ -58,6 +71,17 @@ type getProjectDetailsRequest struct {
 	ID int32 `uri:"id" binding:"required,min=1"` // project id
 }
 
+// @Schemes
+// @Summary Get project details
+// @Description Get project details with provided ID
+// @Tags projects
+// @Param id path integer true "Project ID"
+// @Produce json
+// @Success 200 {object} db.GetProjectRow
+// @Failure 400 {object} ErrorResponse "Invalid ID"
+// @Failure 404 {object} ErrorResponse "Project with given ID does not exist"
+// @Failure 500 {object} ErrorResponse "Any other server-side error"
+// @Router /project-details/{id} [get]
 // getProjectDetails returns project details for a profile cv
 func (server *Server) getProjectDetails(ctx *gin.Context) {
 	var request getProjectDetailsRequest

@@ -8,3 +8,5 @@
 - golang-migrate
 - sqlc
 - testify
+- [gin cors](https://github.com/gin-contrib/cors)
+- [gin swagger](https://github.com/swaggo/gin-swagger)
