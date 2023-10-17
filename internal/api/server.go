@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/aalug/cv-backend-go/internal/config"
 	db "github.com/aalug/cv-backend-go/internal/db/sqlc"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,6 +29,11 @@ func NewServer(cfg config.Config, store db.Store) *Server {
 // setupRouter sets up the HTTP routing
 func (server *Server) setupRouter() {
 	router := gin.Default()
+
+	// CORS
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	router.Use(cors.New(corsConfig))
 
 	// --- cv profiles ---
 	router.GET("/cv-profiles/:id", server.getCvProfile)
