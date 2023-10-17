@@ -152,7 +152,7 @@ func TestListProjectsAPI(t *testing.T) {
 			server := newTestServer(store)
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/projects/%d", tc.id)
+			url := fmt.Sprintf("%s/projects/%d", baseUrl, tc.id)
 			req, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
@@ -245,7 +245,7 @@ func TestGetProjectDetailsAPI(t *testing.T) {
 			server := newTestServer(store)
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/project-details/%d", tc.id)
+			url := fmt.Sprintf("%s/project-details/%d", baseUrl, tc.id)
 			req, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 

@@ -1,10 +1,13 @@
 package api
 
 import (
+	"github.com/aalug/cv-backend-go/docs"
 	"github.com/aalug/cv-backend-go/internal/config"
 	db "github.com/aalug/cv-backend-go/internal/db/sqlc"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // Server serves HTTP  requests for the service
@@ -30,20 +33,26 @@ func NewServer(cfg config.Config, store db.Store) *Server {
 func (server *Server) setupRouter() {
 	router := gin.Default()
 
+	routerV1 := router.Group("/api/v1")
+
 	// CORS
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowAllOrigins = true
 	router.Use(cors.New(corsConfig))
 
+	// Swagger docs
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	docs.SwaggerInfo.BasePath = "/api/v1"
+
 	// --- cv profiles ---
-	router.GET("/cv-profiles/:id", server.getCvProfile)
+	routerV1.GET("/cv-profiles/:id", server.getCvProfile)
 
 	// --- skills ---
-	router.GET("/skills/:id", server.listSkills)
+	routerV1.GET("/skills/:id", server.listSkills)
 
 	// --- projects ---
-	router.GET("/projects/:id", server.listProjects)
-	router.GET("/project-details/:id", server.getProjectDetails)
+	routerV1.GET("/projects/:id", server.listProjects)
+	routerV1.GET("/project-details/:id", server.getProjectDetails)
 
 	server.router = router
 }
@@ -53,6 +62,10 @@ func (server *Server) Start(address string) error {
 	return server.router.Run(address)
 }
 
-func errorResponse(err error) gin.H {
-	return gin.H{"error": err.Error()}
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
+func errorResponse(err error) ErrorResponse {
+	return ErrorResponse{Error: err.Error()}
 }

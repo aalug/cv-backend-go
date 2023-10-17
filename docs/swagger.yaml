@@ -1,0 +1,253 @@
+basePath: /api/v1
+definitions:
+  api.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  api.getCvProfileResponse:
+    properties:
+      address:
+        type: string
+      bio:
+        type: string
+      cv_profile_id:
+        type: integer
+      education:
+        items:
+          $ref: '#/definitions/db.CvEducation'
+        type: array
+      email:
+        type: string
+      github_url:
+        type: string
+      linkedin_url:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      profile_picture:
+        type: string
+    type: object
+  db.CvEducation:
+    properties:
+      cv_profile_id:
+        type: integer
+      degree:
+        type: string
+      end_date:
+        type: string
+      id:
+        type: integer
+      institution:
+        type: string
+      start_date:
+        type: string
+    type: object
+  db.GetProjectRow:
+    properties:
+      cv_profile_id:
+        type: integer
+      description:
+        type: string
+      hex_theme_color:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      project_url:
+        type: string
+      technologies_used:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+    type: object
+  db.ListProjectsRow:
+    properties:
+      cv_profile_id:
+        type: integer
+      hex_theme_color:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      project_url:
+        type: string
+      short_description:
+        type: string
+      technologies_used:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+    type: object
+  db.Skill:
+    properties:
+      category:
+        type: string
+      cv_profile_id:
+        type: integer
+      description:
+        type: string
+      hex_theme_color:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      importance:
+        type: integer
+      name:
+        type: string
+    type: object
+info:
+  contact:
+    email: a.a.gulczynski@gmail.com
+    name: aalug
+    url: https://github.com/aalug
+paths:
+  /cv-profiles/{id}:
+    get:
+      description: Get details of CV profile with provided ID
+      parameters:
+      - description: CV profile ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.getCvProfileResponse'
+        "400":
+          description: Invalid ID
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: CV profile with given ID does not exist
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Any other server-side error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Get CV profile
+      tags:
+      - cv-profiles
+  /project-details/{id}:
+    get:
+      description: Get project details with provided ID
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.GetProjectRow'
+        "400":
+          description: Invalid ID
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: Project with given ID does not exist
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Any other server-side error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Get project details
+      tags:
+      - projects
+  /projects/{id}:
+    get:
+      description: List projects for a profile cv with provided ID
+      parameters:
+      - description: CV profile ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: Page size
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/db.ListProjectsRow'
+            type: array
+        "400":
+          description: Invalid ID, page or page size
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: CV profile with given ID does not exist
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Any other server-side error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: List projects for a profile cv
+      tags:
+      - projects
+  /skills/{id}:
+    get:
+      description: List skills for a profile cv with provided ID
+      parameters:
+      - description: CV profile ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/db.Skill'
+            type: array
+        "400":
+          description: Invalid ID
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: CV profile with given ID does not exist
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Any other server-side error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: List skills for a profile cv
+      tags:
+      - skills
+swagger: "2.0"

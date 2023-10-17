@@ -31,5 +31,8 @@ run:
 mock:
 	mockgen -package mockdb -destination internal/db/mock/store.go github.com/aalug/cv-backend-go/internal/db/sqlc Store
 
+# generate swag documentation files
+swag:
+	swag init -g cmd/main.go
 
-.PHONY: generate_migrations, migrate_up, migrate_down, sqlc, run, mock
+.PHONY: generate_migrations, migrate_up, migrate_down, sqlc, run, mock, swag

@@ -25,6 +25,17 @@ type getCvProfileResponse struct {
 	Education      []db.CvEducation `json:"education"`
 }
 
+// @Schemes
+// @Summary Get CV profile
+// @Description Get details of CV profile with provided ID
+// @Tags cv-profiles
+// @Param id path integer true "CV profile ID"
+// @Produce json
+// @Success 200 {object} getCvProfileResponse
+// @Failure 400 {object} ErrorResponse "Invalid ID"
+// @Failure 404 {object} ErrorResponse "CV profile with given ID does not exist"
+// @Failure 500 {object} ErrorResponse "Any other server-side error"
+// @Router /cv-profiles/{id} [get]
 // getCvProfile handles getting cv profile details
 func (server *Server) getCvProfile(ctx *gin.Context) {
 	var request getCvProfileRequest
