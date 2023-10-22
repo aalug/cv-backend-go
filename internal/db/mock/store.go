@@ -125,21 +125,6 @@ func (mr *MockStoreMockRecorder) GetCvProfile(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCvProfile", reflect.TypeOf((*MockStore)(nil).GetCvProfile), arg0, arg1)
 }
 
-// GetProject mocks base method.
-func (m *MockStore) GetProject(arg0 context.Context, arg1 int32) (db.GetProjectRow, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetProject", arg0, arg1)
-	ret0, _ := ret[0].(db.GetProjectRow)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetProject indicates an expected call of GetProject.
-func (mr *MockStoreMockRecorder) GetProject(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProject", reflect.TypeOf((*MockStore)(nil).GetProject), arg0, arg1)
-}
-
 // GetSkill mocks base method.
 func (m *MockStore) GetSkill(arg0 context.Context, arg1 int32) (db.Skill, error) {
 	m.ctrl.T.Helper()

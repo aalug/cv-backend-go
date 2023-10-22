@@ -68,7 +68,7 @@ const listCvEducations = `-- name: ListCvEducations :many
 SELECT id, institution, degree, start_date, end_date, cv_profile_id
 FROM cv_educations
 WHERE cv_profile_id = $1
-ORDER BY start_date DESC
+ORDER BY start_date
 LIMIT $2 OFFSET $3
 `
 

@@ -12,5 +12,5 @@ WHERE id = $1;
 SELECT *
 FROM cv_educations
 WHERE cv_profile_id = $1
-ORDER BY start_date DESC
+ORDER BY start_date
 LIMIT $2 OFFSET $3;

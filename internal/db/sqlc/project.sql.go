@@ -61,55 +61,15 @@ func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) (P
 	return i, err
 }
 
-const getProject = `-- name: GetProject :one
-SELECT id,
-       title,
-       description,
-       image,
-       technologies_used,
-       hex_theme_color,
-       project_url,
-       cv_profile_id
-FROM projects
-WHERE id = $1
-`
-
-type GetProjectRow struct {
-	ID               int32    `json:"id"`
-	Title            string   `json:"title"`
-	Description      string   `json:"description"`
-	Image            string   `json:"image"`
-	TechnologiesUsed []string `json:"technologies_used"`
-	HexThemeColor    string   `json:"hex_theme_color"`
-	ProjectUrl       string   `json:"project_url"`
-	CvProfileID      int32    `json:"cv_profile_id"`
-}
-
-func (q *Queries) GetProject(ctx context.Context, id int32) (GetProjectRow, error) {
-	row := q.db.QueryRowContext(ctx, getProject, id)
-	var i GetProjectRow
-	err := row.Scan(
-		&i.ID,
-		&i.Title,
-		&i.Description,
-		&i.Image,
-		pq.Array(&i.TechnologiesUsed),
-		&i.HexThemeColor,
-		&i.ProjectUrl,
-		&i.CvProfileID,
-	)
-	return i, err
-}
-
 const listProjects = `-- name: ListProjects :many
 SELECT id,
        title,
        short_description,
+       description,
        image,
        technologies_used,
        hex_theme_color,
-       project_url,
-       cv_profile_id
+       project_url
 FROM projects
 WHERE cv_profile_id = $1
 ORDER BY technologies_used
@@ -126,11 +86,11 @@ type ListProjectsRow struct {
 	ID               int32    `json:"id"`
 	Title            string   `json:"title"`
 	ShortDescription string   `json:"short_description"`
+	Description      string   `json:"description"`
 	Image            string   `json:"image"`
 	TechnologiesUsed []string `json:"technologies_used"`
 	HexThemeColor    string   `json:"hex_theme_color"`
 	ProjectUrl       string   `json:"project_url"`
-	CvProfileID      int32    `json:"cv_profile_id"`
 }
 
 func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]ListProjectsRow, error) {
@@ -146,11 +106,11 @@ func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]L
 			&i.ID,
 			&i.Title,
 			&i.ShortDescription,
+			&i.Description,
 			&i.Image,
 			pq.Array(&i.TechnologiesUsed),
 			&i.HexThemeColor,
 			&i.ProjectUrl,
-			&i.CvProfileID,
 		); err != nil {
 			return nil, err
 		}

@@ -47,21 +47,6 @@ func TestQueries_CreateProject(t *testing.T) {
 	createRandomProject(t, 0)
 }
 
-func TestQueries_GetProject(t *testing.T) {
-	project := createRandomProject(t, 0)
-	project2, err := testQueries.GetProject(context.Background(), project.ID)
-	require.NoError(t, err)
-	require.NotEmpty(t, project2)
-	require.Equal(t, project.ID, project2.ID)
-	require.Equal(t, project.Title, project2.Title)
-	require.Equal(t, project.Description, project2.Description)
-	require.Equal(t, project.Image, project2.Image)
-	require.Equal(t, project.TechnologiesUsed, project2.TechnologiesUsed)
-	require.Equal(t, project.HexThemeColor, project2.HexThemeColor)
-	require.Equal(t, project.ProjectUrl, project2.ProjectUrl)
-	require.Equal(t, project.CvProfileID, project2.CvProfileID)
-}
-
 func TestQueries_ListProjects(t *testing.T) {
 	cvProfile := createRandomCvProfile(t)
 	for i := 0; i < 5; i++ {
