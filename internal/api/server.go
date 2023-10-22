@@ -38,7 +38,7 @@ func (server *Server) setupRouter() {
 	// CORS
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowAllOrigins = true
-	router.Use(cors.New(corsConfig))
+	routerV1.Use(cors.New(corsConfig))
 
 	// Swagger docs
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
@@ -52,7 +52,6 @@ func (server *Server) setupRouter() {
 
 	// --- projects ---
 	routerV1.GET("/projects/:id", server.listProjects)
-	routerV1.GET("/project-details/:id", server.getProjectDetails)
 
 	server.router = router
 }

@@ -66,53 +66,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/project-details/{id}": {
-            "get": {
-                "description": "Get project details with provided ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "projects"
-                ],
-                "summary": "Get project details",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Project ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/db.GetProjectRow"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid ID",
-                        "schema": {
-                            "$ref": "#/definitions/api.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Project with given ID does not exist",
-                        "schema": {
-                            "$ref": "#/definitions/api.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Any other server-side error",
-                        "schema": {
-                            "$ref": "#/definitions/api.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/projects/{id}": {
             "get": {
                 "description": "List projects for a profile cv with provided ID",
@@ -298,43 +251,11 @@ const docTemplate = `{
                 }
             }
         },
-        "db.GetProjectRow": {
-            "type": "object",
-            "properties": {
-                "cv_profile_id": {
-                    "type": "integer"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "hex_theme_color": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "project_url": {
-                    "type": "string"
-                },
-                "technologies_used": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
         "db.ListProjectsRow": {
             "type": "object",
             "properties": {
-                "cv_profile_id": {
-                    "type": "integer"
+                "description": {
+                    "type": "string"
                 },
                 "hex_theme_color": {
                     "type": "string"
