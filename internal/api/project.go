@@ -25,7 +25,7 @@ type listProjectsQueryRequest struct {
 // @Param page query integer true "Page number"
 // @Param page_size query integer true "Page size"
 // @Produce json
-// @Success 200 {object} []db.ListProjectsRow
+// @Success 200 {object} []db.ListProjectsWithTechnologiesRow
 // @Failure 400 {object} ErrorResponse "Invalid ID, page or page size"
 // @Failure 404 {object} ErrorResponse "CV profile with given ID does not exist"
 // @Failure 500 {object} ErrorResponse "Any other server-side error"
@@ -47,13 +47,13 @@ func (server *Server) listProjects(ctx *gin.Context) {
 	}
 
 	// get all projects for a profile cv
-	params := db.ListProjectsParams{
+	params := db.ListProjectsWithTechnologiesParams{
 		CvProfileID: request.ID,
 		Limit:       queryRequest.PageSize,
 		Offset:      (queryRequest.Page - 1) * queryRequest.PageSize,
 	}
 
-	projects, err := server.store.ListProjects(ctx, params)
+	projects, err := server.store.ListProjectsWithTechnologies(ctx, params)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))

@@ -32,15 +32,20 @@ type CvProfile struct {
 }
 
 type Project struct {
-	ID               int32    `json:"id"`
-	Title            string   `json:"title"`
-	ShortDescription string   `json:"short_description"`
-	Description      string   `json:"description"`
-	Image            string   `json:"image"`
-	TechnologiesUsed []string `json:"technologies_used"`
-	HexThemeColor    string   `json:"hex_theme_color"`
-	ProjectUrl       string   `json:"project_url"`
-	CvProfileID      int32    `json:"cv_profile_id"`
+	ID               int32  `json:"id"`
+	Title            string `json:"title"`
+	ShortDescription string `json:"short_description"`
+	Description      string `json:"description"`
+	Image            string `json:"image"`
+	HexThemeColor    string `json:"hex_theme_color"`
+	ProjectUrl       string `json:"project_url"`
+	CvProfileID      int32  `json:"cv_profile_id"`
+	Significance     int32  `json:"significance"`
+}
+
+type ProjectTechnology struct {
+	ProjectID    int32 `json:"project_id"`
+	TechnologyID int32 `json:"technology_id"`
 }
 
 type Skill struct {
@@ -52,4 +57,11 @@ type Skill struct {
 	HexThemeColor string `json:"hex_theme_color"`
 	CvProfileID   int32  `json:"cv_profile_id"`
 	Importance    int32  `json:"importance"`
+}
+
+type Technology struct {
+	ID         int32  `json:"id"`
+	Name       string `json:"name"`
+	Url        string `json:"url"`
+	OrderField int32  `json:"order_field"`
 }

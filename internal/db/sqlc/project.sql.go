@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/lib/pq"
 )
 
 const createProject = `-- name: CreateProject :one
@@ -16,23 +14,21 @@ INSERT INTO projects (title,
                       short_description,
                       description,
                       image,
-                      technologies_used,
                       hex_theme_color,
                       project_url,
                       cv_profile_id)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-RETURNING id, title, short_description, description, image, technologies_used, hex_theme_color, project_url, cv_profile_id
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING id, title, short_description, description, image, hex_theme_color, project_url, cv_profile_id, significance
 `
 
 type CreateProjectParams struct {
-	Title            string   `json:"title"`
-	ShortDescription string   `json:"short_description"`
-	Description      string   `json:"description"`
-	Image            string   `json:"image"`
-	TechnologiesUsed []string `json:"technologies_used"`
-	HexThemeColor    string   `json:"hex_theme_color"`
-	ProjectUrl       string   `json:"project_url"`
-	CvProfileID      int32    `json:"cv_profile_id"`
+	Title            string `json:"title"`
+	ShortDescription string `json:"short_description"`
+	Description      string `json:"description"`
+	Image            string `json:"image"`
+	HexThemeColor    string `json:"hex_theme_color"`
+	ProjectUrl       string `json:"project_url"`
+	CvProfileID      int32  `json:"cv_profile_id"`
 }
 
 func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) (Project, error) {
@@ -41,7 +37,6 @@ func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) (P
 		arg.ShortDescription,
 		arg.Description,
 		arg.Image,
-		pq.Array(arg.TechnologiesUsed),
 		arg.HexThemeColor,
 		arg.ProjectUrl,
 		arg.CvProfileID,
@@ -53,10 +48,10 @@ func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) (P
 		&i.ShortDescription,
 		&i.Description,
 		&i.Image,
-		pq.Array(&i.TechnologiesUsed),
 		&i.HexThemeColor,
 		&i.ProjectUrl,
 		&i.CvProfileID,
+		&i.Significance,
 	)
 	return i, err
 }
@@ -67,12 +62,12 @@ SELECT id,
        short_description,
        description,
        image,
-       technologies_used,
        hex_theme_color,
-       project_url
+       project_url,
+       significance
 FROM projects
 WHERE cv_profile_id = $1
-ORDER BY technologies_used
+ORDER BY significance
 LIMIT $2 OFFSET $3
 `
 
@@ -83,14 +78,14 @@ type ListProjectsParams struct {
 }
 
 type ListProjectsRow struct {
-	ID               int32    `json:"id"`
-	Title            string   `json:"title"`
-	ShortDescription string   `json:"short_description"`
-	Description      string   `json:"description"`
-	Image            string   `json:"image"`
-	TechnologiesUsed []string `json:"technologies_used"`
-	HexThemeColor    string   `json:"hex_theme_color"`
-	ProjectUrl       string   `json:"project_url"`
+	ID               int32  `json:"id"`
+	Title            string `json:"title"`
+	ShortDescription string `json:"short_description"`
+	Description      string `json:"description"`
+	Image            string `json:"image"`
+	HexThemeColor    string `json:"hex_theme_color"`
+	ProjectUrl       string `json:"project_url"`
+	Significance     int32  `json:"significance"`
 }
 
 func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]ListProjectsRow, error) {
@@ -108,9 +103,9 @@ func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]L
 			&i.ShortDescription,
 			&i.Description,
 			&i.Image,
-			pq.Array(&i.TechnologiesUsed),
 			&i.HexThemeColor,
 			&i.ProjectUrl,
+			&i.Significance,
 		); err != nil {
 			return nil, err
 		}

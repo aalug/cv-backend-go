@@ -41,13 +41,13 @@ func TestListProjectsAPI(t *testing.T) {
 				pageSize: 10,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
-				params := db.ListProjectsParams{
+				params := db.ListProjectsWithTechnologiesParams{
 					CvProfileID: cvProfile.ID,
 					Limit:       10,
 					Offset:      0,
 				}
 				store.EXPECT().
-					ListProjects(gomock.Any(), gomock.Eq(params)).
+					ListProjectsWithTechnologies(gomock.Any(), gomock.Eq(params)).
 					Times(1).
 					Return(projects, nil)
 			},
@@ -65,7 +65,7 @@ func TestListProjectsAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					ListProjects(gomock.Any(), gomock.Any()).
+					ListProjectsWithTechnologies(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -81,7 +81,7 @@ func TestListProjectsAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					ListProjects(gomock.Any(), gomock.Any()).
+					ListProjectsWithTechnologies(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -97,7 +97,7 @@ func TestListProjectsAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					ListProjects(gomock.Any(), gomock.Any()).
+					ListProjectsWithTechnologies(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -113,9 +113,9 @@ func TestListProjectsAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					ListProjects(gomock.Any(), gomock.Any()).
+					ListProjectsWithTechnologies(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return([]db.ListProjectsRow{}, sql.ErrNoRows)
+					Return([]db.ListProjectsWithTechnologiesRow{}, sql.ErrNoRows)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusNotFound, recorder.Code)
@@ -130,9 +130,9 @@ func TestListProjectsAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					ListProjects(gomock.Any(), gomock.Any()).
+					ListProjectsWithTechnologies(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return([]db.ListProjectsRow{}, sql.ErrConnDone)
+					Return([]db.ListProjectsWithTechnologiesRow{}, sql.ErrConnDone)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
@@ -170,21 +170,29 @@ func TestListProjectsAPI(t *testing.T) {
 }
 
 // generateRandomProjectRows generates and returns a slice of random list project rows
-func generateRandomProjectRows() []db.ListProjectsRow {
-	var projects []db.ListProjectsRow
+func generateRandomProjectRows() []db.ListProjectsWithTechnologiesRow {
+	var projects []db.ListProjectsWithTechnologiesRow
+	var technologiesUsed []db.ListTechnologiesForProjectRow
+
+	for i := 0; i < 5; i++ {
+		technologiesUsed = append(technologiesUsed, db.ListTechnologiesForProjectRow{
+			ID:   int32(i),
+			Name: utils.RandomString(6),
+			Url:  utils.RandomString(5),
+		})
+	}
+
 	for i := 0; i < 10; i++ {
-		projects = append(projects, db.ListProjectsRow{
+		projects = append(projects, db.ListProjectsWithTechnologiesRow{
 			ID:               int32(i),
 			Title:            utils.RandomString(6),
 			ShortDescription: utils.RandomString(5),
+			Description:      utils.RandomString(10),
 			Image:            utils.RandomString(6),
-			TechnologiesUsed: []string{
-				utils.RandomString(4),
-				utils.RandomString(5),
-			},
-			Description:   utils.RandomString(10),
-			HexThemeColor: utils.RandomString(6),
-			ProjectUrl:    utils.RandomString(6),
+			HexThemeColor:    utils.RandomString(6),
+			ProjectUrl:       utils.RandomString(6),
+			Significance:     utils.RandomInt(1, 50),
+			TechnologiesUsed: technologiesUsed,
 		})
 	}
 
@@ -192,14 +200,15 @@ func generateRandomProjectRows() []db.ListProjectsRow {
 }
 
 // requireBodyMatchProjects asserts that the response body matches the provided projects
-func requireBodyMatchProjects(t *testing.T, body *bytes.Buffer, projects []db.ListProjectsRow) {
+func requireBodyMatchProjects(t *testing.T, body *bytes.Buffer, projects []db.ListProjectsWithTechnologiesRow) {
 	data, err := io.ReadAll(body)
 	require.NoError(t, err)
 
-	var gotProjects []db.ListProjectsRow
+	var gotProjects []db.ListProjectsWithTechnologiesRow
 	err = json.Unmarshal(data, &gotProjects)
 	require.NoError(t, err)
 
+	// sort projects to compare each result
 	sort.Slice(projects, func(i, j int) bool {
 		return projects[i].ID < projects[j].ID
 	})
@@ -209,17 +218,21 @@ func requireBodyMatchProjects(t *testing.T, body *bytes.Buffer, projects []db.Li
 	})
 
 	for i := 0; i < len(projects); i++ {
-		// sort technologies used
-		sort.Strings(projects[i].TechnologiesUsed)
-		sort.Strings(gotProjects[i].TechnologiesUsed)
+		project := projects[i]
+		gotProject := gotProjects[i]
 
-		require.Equal(t, projects[i].ID, gotProjects[i].ID)
-		require.Equal(t, projects[i].Title, gotProjects[i].Title)
-		require.Equal(t, projects[i].ShortDescription, gotProjects[i].ShortDescription)
-		require.Equal(t, projects[i].Description, gotProjects[i].Description)
-		require.Equal(t, projects[i].Image, gotProjects[i].Image)
-		require.Equal(t, projects[i].TechnologiesUsed, gotProjects[i].TechnologiesUsed)
-		require.Equal(t, projects[i].HexThemeColor, gotProjects[i].HexThemeColor)
-		require.Equal(t, projects[i].ProjectUrl, gotProjects[i].ProjectUrl)
+		require.Equal(t, project.ID, gotProject.ID)
+		require.Equal(t, project.Title, gotProject.Title)
+		require.Equal(t, project.ShortDescription, gotProject.ShortDescription)
+		require.Equal(t, project.Description, gotProject.Description)
+		require.Equal(t, project.Image, gotProject.Image)
+		require.Equal(t, project.HexThemeColor, gotProject.HexThemeColor)
+		require.Equal(t, project.ProjectUrl, gotProject.ProjectUrl)
+
+		for j := 0; j < len(project.TechnologiesUsed); j++ {
+			require.Equal(t, project.TechnologiesUsed[j].ID, gotProject.TechnologiesUsed[j].ID)
+			require.Equal(t, project.TechnologiesUsed[j].Name, gotProject.TechnologiesUsed[j].Name)
+			require.Equal(t, project.TechnologiesUsed[j].Url, gotProject.TechnologiesUsed[j].Url)
+		}
 	}
 }

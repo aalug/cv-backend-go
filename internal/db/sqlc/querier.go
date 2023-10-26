@@ -12,13 +12,16 @@ type Querier interface {
 	CreateCvEducation(ctx context.Context, arg CreateCvEducationParams) (CvEducation, error)
 	CreateCvProfile(ctx context.Context, arg CreateCvProfileParams) (CvProfile, error)
 	CreateProject(ctx context.Context, arg CreateProjectParams) (Project, error)
+	CreateProjectTechnology(ctx context.Context, arg CreateProjectTechnologyParams) (ProjectTechnology, error)
 	CreateSkill(ctx context.Context, arg CreateSkillParams) (Skill, error)
+	CreateTechnology(ctx context.Context, arg CreateTechnologyParams) (Technology, error)
 	GetCvEducation(ctx context.Context, id int32) (CvEducation, error)
 	GetCvProfile(ctx context.Context, id int32) (CvProfile, error)
 	GetSkill(ctx context.Context, id int32) (Skill, error)
 	ListCvEducations(ctx context.Context, arg ListCvEducationsParams) ([]CvEducation, error)
 	ListProjects(ctx context.Context, arg ListProjectsParams) ([]ListProjectsRow, error)
 	ListSkills(ctx context.Context, arg ListSkillsParams) ([]Skill, error)
+	ListTechnologiesForProject(ctx context.Context, projectID int32) ([]ListTechnologiesForProjectRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

@@ -80,6 +80,21 @@ func (mr *MockStoreMockRecorder) CreateProject(arg0, arg1 interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockStore)(nil).CreateProject), arg0, arg1)
 }
 
+// CreateProjectTechnology mocks base method.
+func (m *MockStore) CreateProjectTechnology(arg0 context.Context, arg1 db.CreateProjectTechnologyParams) (db.ProjectTechnology, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateProjectTechnology", arg0, arg1)
+	ret0, _ := ret[0].(db.ProjectTechnology)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateProjectTechnology indicates an expected call of CreateProjectTechnology.
+func (mr *MockStoreMockRecorder) CreateProjectTechnology(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProjectTechnology", reflect.TypeOf((*MockStore)(nil).CreateProjectTechnology), arg0, arg1)
+}
+
 // CreateSkill mocks base method.
 func (m *MockStore) CreateSkill(arg0 context.Context, arg1 db.CreateSkillParams) (db.Skill, error) {
 	m.ctrl.T.Helper()
@@ -93,6 +108,21 @@ func (m *MockStore) CreateSkill(arg0 context.Context, arg1 db.CreateSkillParams)
 func (mr *MockStoreMockRecorder) CreateSkill(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSkill", reflect.TypeOf((*MockStore)(nil).CreateSkill), arg0, arg1)
+}
+
+// CreateTechnology mocks base method.
+func (m *MockStore) CreateTechnology(arg0 context.Context, arg1 db.CreateTechnologyParams) (db.Technology, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateTechnology", arg0, arg1)
+	ret0, _ := ret[0].(db.Technology)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateTechnology indicates an expected call of CreateTechnology.
+func (mr *MockStoreMockRecorder) CreateTechnology(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTechnology", reflect.TypeOf((*MockStore)(nil).CreateTechnology), arg0, arg1)
 }
 
 // GetCvEducation mocks base method.
@@ -170,6 +200,21 @@ func (mr *MockStoreMockRecorder) ListProjects(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProjects", reflect.TypeOf((*MockStore)(nil).ListProjects), arg0, arg1)
 }
 
+// ListProjectsWithTechnologies mocks base method.
+func (m *MockStore) ListProjectsWithTechnologies(arg0 context.Context, arg1 db.ListProjectsWithTechnologiesParams) ([]db.ListProjectsWithTechnologiesRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListProjectsWithTechnologies", arg0, arg1)
+	ret0, _ := ret[0].([]db.ListProjectsWithTechnologiesRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListProjectsWithTechnologies indicates an expected call of ListProjectsWithTechnologies.
+func (mr *MockStoreMockRecorder) ListProjectsWithTechnologies(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProjectsWithTechnologies", reflect.TypeOf((*MockStore)(nil).ListProjectsWithTechnologies), arg0, arg1)
+}
+
 // ListSkills mocks base method.
 func (m *MockStore) ListSkills(arg0 context.Context, arg1 db.ListSkillsParams) ([]db.Skill, error) {
 	m.ctrl.T.Helper()
@@ -183,4 +228,19 @@ func (m *MockStore) ListSkills(arg0 context.Context, arg1 db.ListSkillsParams) (
 func (mr *MockStoreMockRecorder) ListSkills(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListSkills", reflect.TypeOf((*MockStore)(nil).ListSkills), arg0, arg1)
+}
+
+// ListTechnologiesForProject mocks base method.
+func (m *MockStore) ListTechnologiesForProject(arg0 context.Context, arg1 int32) ([]db.ListTechnologiesForProjectRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListTechnologiesForProject", arg0, arg1)
+	ret0, _ := ret[0].([]db.ListTechnologiesForProjectRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTechnologiesForProject indicates an expected call of ListTechnologiesForProject.
+func (mr *MockStoreMockRecorder) ListTechnologiesForProject(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTechnologiesForProject", reflect.TypeOf((*MockStore)(nil).ListTechnologiesForProject), arg0, arg1)
 }
