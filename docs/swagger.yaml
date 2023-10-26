@@ -45,7 +45,7 @@ definitions:
       start_date:
         type: string
     type: object
-  db.ListProjectsRow:
+  db.ListProjectsWithTechnologiesRow:
     properties:
       description:
         type: string
@@ -59,11 +59,22 @@ definitions:
         type: string
       short_description:
         type: string
+      significance:
+        type: integer
       technologies_used:
         items:
-          type: string
+          $ref: '#/definitions/db.ListTechnologiesForProjectRow'
         type: array
       title:
+        type: string
+    type: object
+  db.ListTechnologiesForProjectRow:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      url:
         type: string
     type: object
   db.Skill:
@@ -148,7 +159,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/db.ListProjectsRow'
+              $ref: '#/definitions/db.ListProjectsWithTechnologiesRow'
             type: array
         "400":
           description: Invalid ID, page or page size
