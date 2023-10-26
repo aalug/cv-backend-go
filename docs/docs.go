@@ -105,7 +105,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/db.ListProjectsRow"
+                                "$ref": "#/definitions/db.ListProjectsWithTechnologiesRow"
                             }
                         }
                     },
@@ -251,7 +251,7 @@ const docTemplate = `{
                 }
             }
         },
-        "db.ListProjectsRow": {
+        "db.ListProjectsWithTechnologiesRow": {
             "type": "object",
             "properties": {
                 "description": {
@@ -272,13 +272,30 @@ const docTemplate = `{
                 "short_description": {
                     "type": "string"
                 },
+                "significance": {
+                    "type": "integer"
+                },
                 "technologies_used": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/db.ListTechnologiesForProjectRow"
                     }
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.ListTechnologiesForProjectRow": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }

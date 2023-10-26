@@ -5,6 +5,7 @@ import (
 	"github.com/aalug/cv-backend-go/internal/api"
 	"github.com/aalug/cv-backend-go/internal/config"
 	db "github.com/aalug/cv-backend-go/internal/db/sqlc"
+	_ "github.com/lib/pq"
 	"log"
 )
 
