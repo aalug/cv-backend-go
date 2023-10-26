@@ -18,13 +18,9 @@ func createRandomProject(t *testing.T, cvProfileID int32) Project {
 		ShortDescription: utils.RandomString(5),
 		Description:      utils.RandomString(10),
 		Image:            utils.RandomString(5),
-		TechnologiesUsed: []string{
-			utils.RandomString(2),
-			utils.RandomString(3),
-		},
-		HexThemeColor: utils.RandomString(5),
-		ProjectUrl:    utils.RandomString(5),
-		CvProfileID:   cvProfileID,
+		HexThemeColor:    utils.RandomString(5),
+		ProjectUrl:       utils.RandomString(5),
+		CvProfileID:      cvProfileID,
 	}
 
 	project, err := testQueries.CreateProject(context.Background(), params)
@@ -34,7 +30,6 @@ func createRandomProject(t *testing.T, cvProfileID int32) Project {
 	require.Equal(t, params.ShortDescription, project.ShortDescription)
 	require.Equal(t, params.Description, project.Description)
 	require.Equal(t, params.Image, project.Image)
-	require.Equal(t, params.TechnologiesUsed, project.TechnologiesUsed)
 	require.Equal(t, params.HexThemeColor, project.HexThemeColor)
 	require.Equal(t, params.ProjectUrl, project.ProjectUrl)
 	require.Equal(t, params.CvProfileID, project.CvProfileID)
