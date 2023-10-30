@@ -8,4 +8,4 @@ ALTER TABLE skills
 
 -- Add a unique constraint on the combination of "category" and "importance"
 ALTER TABLE skills
-    ADD CONSTRAINT unique_category_importance UNIQUE (category, importancež);
+    ADD CONSTRAINT unique_category_importance UNIQUE (category, importance);
