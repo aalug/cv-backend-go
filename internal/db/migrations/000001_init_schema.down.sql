@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS cv_profiles;
 DROP TABLE IF EXISTS cv_educations;
 DROP TABLE IF EXISTS skills;
 DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS cv_profiles;

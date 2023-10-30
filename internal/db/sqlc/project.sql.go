@@ -119,3 +119,76 @@ func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]L
 	}
 	return items, nil
 }
+
+const listProjectsBySkillName = `-- name: ListProjectsBySkillName :many
+SELECT p.id,
+       p.title,
+       p.short_description,
+       p.description,
+       p.image,
+       p.hex_theme_color,
+       p.project_url,
+       p.significance
+FROM projects p
+         JOIN project_skills ps ON p.id = ps.project_id
+         JOIN skills s ON ps.skill_id = s.id
+WHERE s.name = $4::text
+  AND p.cv_profile_id = $1
+ORDER BY significance
+LIMIT $2 OFFSET $3
+`
+
+type ListProjectsBySkillNameParams struct {
+	CvProfileID int32  `json:"cv_profile_id"`
+	Limit       int32  `json:"limit"`
+	Offset      int32  `json:"offset"`
+	SkillName   string `json:"skill_name"`
+}
+
+type ListProjectsBySkillNameRow struct {
+	ID               int32  `json:"id"`
+	Title            string `json:"title"`
+	ShortDescription string `json:"short_description"`
+	Description      string `json:"description"`
+	Image            string `json:"image"`
+	HexThemeColor    string `json:"hex_theme_color"`
+	ProjectUrl       string `json:"project_url"`
+	Significance     int32  `json:"significance"`
+}
+
+func (q *Queries) ListProjectsBySkillName(ctx context.Context, arg ListProjectsBySkillNameParams) ([]ListProjectsBySkillNameRow, error) {
+	rows, err := q.db.QueryContext(ctx, listProjectsBySkillName,
+		arg.CvProfileID,
+		arg.Limit,
+		arg.Offset,
+		arg.SkillName,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListProjectsBySkillNameRow{}
+	for rows.Next() {
+		var i ListProjectsBySkillNameRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.ShortDescription,
+			&i.Description,
+			&i.Image,
+			&i.HexThemeColor,
+			&i.ProjectUrl,
+			&i.Significance,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
