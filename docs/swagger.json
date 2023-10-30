@@ -56,6 +56,77 @@
                 }
             }
         },
+        "/projects/skill/{id}/{skill}": {
+            "get": {
+                "description": "List projects for a profile cv with provided ID and skill",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "List projects with skill for a profile cv",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "CV profile ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Skill name",
+                        "name": "skill",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/db.ListProjectsWithTechnologiesBySkillNameRow"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID, skill name, page or page size",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "CV profile with given ID or skill with given nam,e does not exist",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Any other server-side error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/projects/{id}": {
             "get": {
                 "description": "List projects for a profile cv with provided ID",
@@ -237,6 +308,41 @@
                     "type": "string"
                 },
                 "start_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.ListProjectsWithTechnologiesBySkillNameRow": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "hex_theme_color": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "project_url": {
+                    "type": "string"
+                },
+                "short_description": {
+                    "type": "string"
+                },
+                "significance": {
+                    "type": "integer"
+                },
+                "technologies_used": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/db.ListTechnologiesForProjectRow"
+                    }
+                },
+                "title": {
                     "type": "string"
                 }
             }

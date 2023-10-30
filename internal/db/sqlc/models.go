@@ -43,6 +43,11 @@ type Project struct {
 	Significance     int32  `json:"significance"`
 }
 
+type ProjectSkill struct {
+	ProjectID int32 `json:"project_id"`
+	SkillID   int32 `json:"skill_id"`
+}
+
 type ProjectTechnology struct {
 	ProjectID    int32 `json:"project_id"`
 	TechnologyID int32 `json:"technology_id"`

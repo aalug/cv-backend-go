@@ -45,6 +45,29 @@ definitions:
       start_date:
         type: string
     type: object
+  db.ListProjectsWithTechnologiesBySkillNameRow:
+    properties:
+      description:
+        type: string
+      hex_theme_color:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      project_url:
+        type: string
+      short_description:
+        type: string
+      significance:
+        type: integer
+      technologies_used:
+        items:
+          $ref: '#/definitions/db.ListTechnologiesForProjectRow'
+        type: array
+      title:
+        type: string
+    type: object
   db.ListProjectsWithTechnologiesRow:
     properties:
       description:
@@ -174,6 +197,55 @@ paths:
           schema:
             $ref: '#/definitions/api.ErrorResponse'
       summary: List projects for a profile cv
+      tags:
+      - projects
+  /projects/skill/{id}/{skill}:
+    get:
+      description: List projects for a profile cv with provided ID and skill
+      parameters:
+      - description: CV profile ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Skill name
+        in: path
+        name: skill
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: Page size
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/db.ListProjectsWithTechnologiesBySkillNameRow'
+            type: array
+        "400":
+          description: Invalid ID, skill name, page or page size
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: CV profile with given ID or skill with given nam,e does not
+            exist
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Any other server-side error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: List projects with skill for a profile cv
       tags:
       - projects
   /skills/{id}:

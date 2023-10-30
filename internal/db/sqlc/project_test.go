@@ -62,3 +62,27 @@ func TestQueries_ListProjects(t *testing.T) {
 		require.NotEmpty(t, project)
 	}
 }
+
+func TestQueries_ListProjectsBySkillName(t *testing.T) {
+	cvProfile := createRandomCvProfile(t)
+	skill := createRandomSkill(t, cvProfile.ID)
+	for i := 0; i < 5; i++ {
+		project := createRandomProject(t, cvProfile.ID)
+		createTestProjectSkill(t, project.ID, skill.ID)
+	}
+
+	params := ListProjectsBySkillNameParams{
+		CvProfileID: cvProfile.ID,
+		Limit:       5,
+		Offset:      0,
+		SkillName:   skill.Name,
+	}
+
+	projects, err := testQueries.ListProjectsBySkillName(context.Background(), params)
+	require.NoError(t, err)
+	require.Len(t, projects, 5)
+
+	for _, project := range projects {
+		require.NotEmpty(t, project)
+	}
+}

@@ -80,6 +80,21 @@ func (mr *MockStoreMockRecorder) CreateProject(arg0, arg1 interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockStore)(nil).CreateProject), arg0, arg1)
 }
 
+// CreateProjectSkill mocks base method.
+func (m *MockStore) CreateProjectSkill(arg0 context.Context, arg1 db.CreateProjectSkillParams) (db.ProjectSkill, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateProjectSkill", arg0, arg1)
+	ret0, _ := ret[0].(db.ProjectSkill)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateProjectSkill indicates an expected call of CreateProjectSkill.
+func (mr *MockStoreMockRecorder) CreateProjectSkill(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProjectSkill", reflect.TypeOf((*MockStore)(nil).CreateProjectSkill), arg0, arg1)
+}
+
 // CreateProjectTechnology mocks base method.
 func (m *MockStore) CreateProjectTechnology(arg0 context.Context, arg1 db.CreateProjectTechnologyParams) (db.ProjectTechnology, error) {
 	m.ctrl.T.Helper()
@@ -200,6 +215,21 @@ func (mr *MockStoreMockRecorder) ListProjects(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProjects", reflect.TypeOf((*MockStore)(nil).ListProjects), arg0, arg1)
 }
 
+// ListProjectsBySkillName mocks base method.
+func (m *MockStore) ListProjectsBySkillName(arg0 context.Context, arg1 db.ListProjectsBySkillNameParams) ([]db.ListProjectsBySkillNameRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListProjectsBySkillName", arg0, arg1)
+	ret0, _ := ret[0].([]db.ListProjectsBySkillNameRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListProjectsBySkillName indicates an expected call of ListProjectsBySkillName.
+func (mr *MockStoreMockRecorder) ListProjectsBySkillName(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProjectsBySkillName", reflect.TypeOf((*MockStore)(nil).ListProjectsBySkillName), arg0, arg1)
+}
+
 // ListProjectsWithTechnologies mocks base method.
 func (m *MockStore) ListProjectsWithTechnologies(arg0 context.Context, arg1 db.ListProjectsWithTechnologiesParams) ([]db.ListProjectsWithTechnologiesRow, error) {
 	m.ctrl.T.Helper()
@@ -213,6 +243,21 @@ func (m *MockStore) ListProjectsWithTechnologies(arg0 context.Context, arg1 db.L
 func (mr *MockStoreMockRecorder) ListProjectsWithTechnologies(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProjectsWithTechnologies", reflect.TypeOf((*MockStore)(nil).ListProjectsWithTechnologies), arg0, arg1)
+}
+
+// ListProjectsWithTechnologiesBySkillName mocks base method.
+func (m *MockStore) ListProjectsWithTechnologiesBySkillName(arg0 context.Context, arg1 db.ListProjectsWithTechnologiesBySkillNameParams) ([]db.ListProjectsWithTechnologiesBySkillNameRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListProjectsWithTechnologiesBySkillName", arg0, arg1)
+	ret0, _ := ret[0].([]db.ListProjectsWithTechnologiesBySkillNameRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListProjectsWithTechnologiesBySkillName indicates an expected call of ListProjectsWithTechnologiesBySkillName.
+func (mr *MockStoreMockRecorder) ListProjectsWithTechnologiesBySkillName(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProjectsWithTechnologiesBySkillName", reflect.TypeOf((*MockStore)(nil).ListProjectsWithTechnologiesBySkillName), arg0, arg1)
 }
 
 // ListSkills mocks base method.

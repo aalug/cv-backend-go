@@ -51,6 +51,7 @@ func (server *Server) setupRouter() {
 	routerV1.GET("/skills/:id", server.listSkills)
 
 	// --- projects ---
+	routerV1.GET("/projects/skill/:id/:skill", server.listProjectsBySkillName)
 	routerV1.GET("/projects/:id", server.listProjects)
 
 	server.router = router

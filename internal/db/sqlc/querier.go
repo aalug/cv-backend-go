@@ -12,6 +12,7 @@ type Querier interface {
 	CreateCvEducation(ctx context.Context, arg CreateCvEducationParams) (CvEducation, error)
 	CreateCvProfile(ctx context.Context, arg CreateCvProfileParams) (CvProfile, error)
 	CreateProject(ctx context.Context, arg CreateProjectParams) (Project, error)
+	CreateProjectSkill(ctx context.Context, arg CreateProjectSkillParams) (ProjectSkill, error)
 	CreateProjectTechnology(ctx context.Context, arg CreateProjectTechnologyParams) (ProjectTechnology, error)
 	CreateSkill(ctx context.Context, arg CreateSkillParams) (Skill, error)
 	CreateTechnology(ctx context.Context, arg CreateTechnologyParams) (Technology, error)
@@ -20,6 +21,7 @@ type Querier interface {
 	GetSkill(ctx context.Context, id int32) (Skill, error)
 	ListCvEducations(ctx context.Context, arg ListCvEducationsParams) ([]CvEducation, error)
 	ListProjects(ctx context.Context, arg ListProjectsParams) ([]ListProjectsRow, error)
+	ListProjectsBySkillName(ctx context.Context, arg ListProjectsBySkillNameParams) ([]ListProjectsBySkillNameRow, error)
 	ListSkills(ctx context.Context, arg ListSkillsParams) ([]Skill, error)
 	ListTechnologiesForProject(ctx context.Context, projectID int32) ([]ListTechnologiesForProjectRow, error)
 }

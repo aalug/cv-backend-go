@@ -22,3 +22,20 @@ FROM projects
 WHERE cv_profile_id = $1
 ORDER BY significance
 LIMIT $2 OFFSET $3;
+
+-- name: ListProjectsBySkillName :many
+SELECT p.id,
+       p.title,
+       p.short_description,
+       p.description,
+       p.image,
+       p.hex_theme_color,
+       p.project_url,
+       p.significance
+FROM projects p
+         JOIN project_skills ps ON p.id = ps.project_id
+         JOIN skills s ON ps.skill_id = s.id
+WHERE s.name = sqlc.arg(skill_name)::text
+  AND p.cv_profile_id = $1
+ORDER BY significance
+LIMIT $2 OFFSET $3;
