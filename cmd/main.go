@@ -10,9 +10,14 @@ import (
 )
 
 func main() {
-	cfg, err := config.LoadConfig(".")
+	//cfg, err := config.LoadConfigFromFile(".")
+	//if err != nil {
+	//	log.Fatal("cannot load env file: ", err)
+	//}
+
+	cfg, err := config.LoadConfigFromEnv()
 	if err != nil {
-		log.Fatal("cannot load env file: ", err)
+		log.Fatal("cannot load env variables: ", err)
 	}
 
 	conn, err := sql.Open(cfg.DBDriver, cfg.DBSource)

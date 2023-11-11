@@ -16,7 +16,7 @@ var testDB *sql.DB
 func TestMain(m *testing.M) {
 	var err error
 
-	cfg, err := config.LoadConfig("../../../.")
+	cfg, err := config.LoadConfigFromFile("../../../.")
 	if err != nil {
 		log.Fatal("cannot load env file: ", err)
 	}
