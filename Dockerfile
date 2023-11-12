@@ -4,6 +4,9 @@ WORKDIR /app
 COPY . .
 RUN go build -o main cmd/main.go
 
+# Set gin to production
+ENV GIN_MODE=release
+
 RUN apk add curl
 RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz  | tar xvz
 
