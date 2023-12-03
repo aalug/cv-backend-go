@@ -1,9 +1,10 @@
-# cv-backend-go
+# Go CV REST API
 
-## App built with Go 1.21
 
 This repository houses the backend service for a full-stack CV application, designed to serve as a personal website. Developed using Go 1.21, this **REST API** incorporates various technologies to deliver a robust and scalable solution.
 The frontend app can be found at [cv-frontend-vuejs](https://github.com/aalug/cv-frontend-vuejs)
+
+## App built with Go 1.21
 
 ### The app uses:
 - Postgres
