@@ -22,10 +22,9 @@ The frontend app can be found at [cv-frontend-vuejs](https://github.com/aalug/cv
 1. Clone the repository
 2. Go to the project's root directory
 3. Rename `app.env.example` to `app.env` and replace the values
-4. Install [golang-migrate](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate)
-5. Run in your terminal:
+4. Run in your terminal:
 `docker-compose up` to run the containers
-6. Now everything should be ready and server running on `SERVER_ADDRESS` specified in `app.env`
+5. Now everything should be ready and server running on `SERVER_ADDRESS` specified in `app.env`
 <hr>
 
 ## Testing
