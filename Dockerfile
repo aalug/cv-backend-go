@@ -4,9 +4,6 @@ WORKDIR /app
 COPY . .
 RUN go build -o main cmd/main.go
 
-# Set gin to production
-ENV GIN_MODE=release
-
 # Install necessary tools (curl and wget)
 RUN apk add --no-cache curl wget
 
@@ -28,6 +25,12 @@ COPY --from=builder /app/start.sh .
 COPY --from=builder /app/migrate .
 
 COPY app.env .
+
+# Set gin to production
+ENV GIN_MODE=release
+
+# Set to production, if used locally - set to false
+ENV PRODUCTION=true
 
 COPY internal/db/migrations ./migrations
 
