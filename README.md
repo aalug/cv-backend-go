@@ -22,9 +22,10 @@ The frontend app can be found at [cv-frontend-vuejs](https://github.com/aalug/cv
 1. Clone the repository
 2. Go to the project's root directory
 3. Rename `app.env.example` to `app.env` and replace the values
-4. Run in your terminal:
+4. In the `Dockerfile` change `PRODUCTION` to `false`
+5. Run in your terminal:
 `docker-compose up` to run the containers
-5. Now everything should be ready and server running on `SERVER_ADDRESS` specified in `app.env`
+6. Now everything should be ready and server running on `SERVER_ADDRESS` specified in `app.env`
 <hr>
 
 ## Testing
